@@ -2,6 +2,47 @@
 
 Scripts to mask donor WGS SNPs (T>C / A>G) in dynast T>C counting, check the mask, and plot single transcripts of single cells.
 
+## Examples (simulated data)
+
+`examples/run_examples.sh` builds a small **simulated** dataset (`examples/make_demo_data.py`:
+two genes, two cells, one homozygous T>C SNP; no real data) and makes one figure of each
+plot type in `examples/figures/`:
+
+```bash
+bash examples/run_examples.sh
+```
+
+| Figure | Command (main options of `scripts/plot_tc_panel.py`) |
+|---|---|
+| 1 fast vs stable gene, same cell | `--genes FAST STABLE` |
+| 2 every read in its row | `--genes FAST --reads-in-rows` |
+| 3 mask: no mask \| corrected mask | `--bam consensus.bam --min-bq 28 --genes FAST --before-after` |
+| 4 scNT-seq layout | `--genes FAST --scnt-layout --label-umis` |
+| 5 scNT-seq layout, no mask \| mask | `--genes FAST --scnt-layout --compare-layout mask` |
+| 6 scNT-seq layout, pre-consensus \| consensus | `--genes FAST --scnt-layout --compare-consensus consensus.bam --compare-layout side` |
+| 7 transcripts, pre-consensus \| consensus | `--genes FAST --compare-consensus consensus.bam --compare-panels masked` |
+
+**1. Fast vs stable gene in one cell** — each row a transcript; X = T>C, colour = reads carrying it;
+labeled transcripts above the dashed line.
+
+![](examples/figures/1_transcripts.png)
+
+**3. What the SNP mask removes** — the SNP is a column of X's without the mask (top) and orange
+squares (not counted) with the mask (bottom); real conversions stay.
+
+![](examples/figures/3_mask.png)
+
+**5. scNT-seq layout, no mask | mask** — the highlighted transcript's reads (inset) all carry the SNP.
+
+![](examples/figures/5_scnt_layout_mask.png)
+
+**6. scNT-seq layout, pre-consensus | consensus.bam** — several reads per transcript (left) become one
+consensus read (right); a T>C seen in one read only is outvoted.
+
+![](examples/figures/6_scnt_layout_consensus.png)
+
+All figures: [examples/figures](examples/figures).
+
 ## How to run
 
 All scripts are in `scripts/`. Run them from your working folder (examples assume
